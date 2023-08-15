@@ -10,6 +10,7 @@ module.exports = {
 			res.status(500).json(err);
 		}
 	},
+
 	// Get a single thought
 	async getSingleThought(req, res) {
 		try {
@@ -28,6 +29,7 @@ module.exports = {
 			res.status(500).json(err);
 		}
 	},
+	
 	// Create a thought
 	async createThought(req, res) {
 		try {
@@ -38,6 +40,7 @@ module.exports = {
 			return res.status(500).json(err);
 		}
 	},
+	
 	// Delete a thought
 	async deleteThought (req, res) {
 		try {
@@ -52,6 +55,7 @@ module.exports = {
 			res.status(500).json(err);
 		}
 	},
+	
 	// Update a thought
 	async updateThought(req, res) {
 		try {
