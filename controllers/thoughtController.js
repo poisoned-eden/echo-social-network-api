@@ -33,7 +33,27 @@ module.exports = {
 	// Create a thought
 	async createThought(req, res) {
 		try {
+			console.log('You are adding a thought');
+			console.log(req.body);
+			
 			const thought = await Thought.create(req.body);
+
+			console.log('Thought added');
+			console.log(thought);
+
+			const user = await User.findOneAndUpdate(
+				{ username: req.params.userId },
+				{ $addToSet: { thoughts: thought._id } },
+				{ runValidators: true, new: true },
+			);
+			
+			if (!user) {
+				console.log('Failed to update user with thought')
+			} else {
+				console.log('Succesffuly updated user with thought');
+			}
+
+
 			res.json(thought);
 		} catch (err) {
 			console.log(err);
@@ -74,4 +94,54 @@ module.exports = {
 			res.status(500).json(err);
 		}
 	},
+
+	async createReaction(req, res) {
+		try {
+			console.log('You are adding a reaction');
+			console.log(req.body);
+			
+			const reaction = await Thought.findOneAndUpdate(
+				{ _id: req.params.thoughtId },
+				{ $addToSet: { reactions: req.body } },
+				{ runValidators: true, new: true },
+			);
+
+			if (!reaction) {
+				console.log('Failed to create reaction')
+			} else {
+				console.log('Reaction added');
+				console.log(reaction);
+			}
+
+
+			res.json(reaction);
+		} catch (err) {
+			console.log(err);
+			return res.status(500).json(err);
+		}
+	};
+
+	async deleteReaction(req, res) {
+		try {
+			const reaction = await Thought.findOneAndUpdate(
+				{ _id: req.params.thoughtId },
+				{
+					$pull: {
+						reactions: { reactionId: req.params.reactionId },
+					},
+				},
+				{ runValidators: true, new: true },
+			);
+
+			if (!reaction) {
+				return res
+					.status(404)
+					.json({ message: 'No reaction found with that ID :(' });
+			}
+
+			res.json(reaction);
+		} catch (err) {
+			res.status(500).json(err);
+		}
+	}
 };
