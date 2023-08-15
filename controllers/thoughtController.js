@@ -119,7 +119,7 @@ module.exports = {
 			console.log(err);
 			return res.status(500).json(err);
 		}
-	};
+	},
 
 	async deleteReaction(req, res) {
 		try {
