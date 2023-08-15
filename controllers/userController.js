@@ -7,22 +7,6 @@ const headCount = async () => {
 	return numberOfUsers;
 };
 
-// Aggregate function for getting the overall grade using $avg
-const grade = async (userId) =>
-	User.aggregate([
-		// only include the given user by using $match
-		{ $match: { _id: new ObjectId(userId) } },
-		{
-			$unwind: '$assignments',
-		},
-		{
-			$group: {
-				_id: new ObjectId(userId),
-				overallGrade: { $avg: '$assignments.score' },
-			},
-		},
-	]);
-
 module.exports = {
 	// Get all users
 	async getUsers(req, res) {
@@ -84,15 +68,15 @@ module.exports = {
 					.json({ message: 'No such user exists' });
 			}
 
-			const course = await Course.findOneAndUpdate(
-				{ users: req.params.userId },
-				{ $pull: { users: req.params.userId } },
+			const thoughts = await Thought.deleteMany(
+				{ username: req.params.userId },
+				{ $pull: { username: req.params.userId } },
 				{ new: true },
 			);
 
-			if (!course) {
+			if (!thoughts) {
 				return res.status(404).json({
-					message: 'User deleted, but no courses found',
+					message: 'User deleted, but no thoughts found',
 				});
 			}
 
@@ -103,15 +87,34 @@ module.exports = {
 		}
 	},
 
-	// Add an assignment to a user
-	async addAssignment(req, res) {
-		console.log('You are adding an assignment');
+	async updateUser(req, res) {
+		try {
+			const user = await User.findOneAndUpdate(
+				{ username: req.params.userId },
+				{ $set: req.body },
+				{ runValidators: true, new: true },
+			);
+
+			if (!user) {
+				res.status(404).json({ message: 'No user with this username!' });
+			}
+
+			res.json(user);
+		} catch (err) {
+			console.log(err);
+			res.status(500).json(err);
+		}
+	};
+
+	// Add a friend to a user
+	async addFriend(req, res) {
+		console.log('You are adding an friend');
 		console.log(req.body);
 
 		try {
 			const user = await User.findOneAndUpdate(
-				{ _id: req.params.userId },
-				{ $addToSet: { assignments: req.body } },
+				{ username: req.params.userId },
+				{ $addToSet: { friends: req.body } },
 				{ runValidators: true, new: true },
 			);
 
@@ -126,14 +129,14 @@ module.exports = {
 			res.status(500).json(err);
 		}
 	},
-	// Remove assignment from a user
-	async removeAssignment(req, res) {
+	// Remove friend from a user
+	async removeFriend(req, res) {
 		try {
 			const user = await User.findOneAndUpdate(
-				{ _id: req.params.userId },
+				{ username: req.params.userId },
 				{
 					$pull: {
-						assignment: { assignmentId: req.params.assignmentId },
+						friends: { friendId: req.params.friendId },
 					},
 				},
 				{ runValidators: true, new: true },
