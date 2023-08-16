@@ -1,4 +1,4 @@
-const { Thought } = require('../models');
+const { Thought, User } = require('../models');
 
 module.exports = {
 	// Get all thoughts
@@ -30,7 +30,6 @@ module.exports = {
 		}
 	},
 	
-	// FIXME:  doesnt update user when thought created
 	// Create a thought
 	async createThought(req, res) {
 		try {
@@ -43,7 +42,7 @@ module.exports = {
 			console.log(thought);
 
 			const user = await User.findOneAndUpdate(
-				{ _id: req.params.userId },
+				{ _id: req.body.userId },
 				{ $addToSet: { thoughts: thought._id } },
 				{ runValidators: true, new: true },
 			);
