@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
+// TODO: remove headCount as not needed
 // Aggregate function to get the number of users overall
 const headCount = async () => {
 	const numberOfUsers = await User.aggregate().count('userCount');
@@ -37,10 +38,7 @@ module.exports = {
 					.json({ message: 'No user with that ID' });
 			}
 
-			res.json({
-				user,
-				grade: await grade(req.params.userId),
-			});
+			res.json(user);
 		} catch (err) {
 			console.log(err);
 			return res.status(500).json(err);
@@ -68,17 +66,19 @@ module.exports = {
 					.json({ message: 'No such user exists' });
 			}
 
-			const thoughts = await Thought.deleteMany(
-				{ username: req.params.userId },
-				{ $pull: { username: req.params.userId } },
-				{ new: true },
-			);
+			// TODO: get deleteMany up and running
 
-			if (!thoughts) {
-				return res.status(404).json({
-					message: 'User deleted, but no thoughts found',
-				});
-			}
+			// const thoughts = await Thought.deleteMany(
+			// 	{ username: user.username },
+			// 	{ $pull: { username: req.params.userId } },
+			// 	{ new: true },
+			// );
+
+			// if (!thoughts) {
+			// 	return res
+			// 		.status(404)
+			// 		.json({ message: 'User deleted, but no thoughts found', });
+			// }
 
 			res.json({ message: 'User successfully deleted' });
 		} catch (err) {
@@ -90,7 +90,7 @@ module.exports = {
 	async updateUser(req, res) {
 		try {
 			const user = await User.findOneAndUpdate(
-				{ username: req.params.userId },
+				{ _id: req.params.userId },
 				{ $set: req.body },
 				{ runValidators: true, new: true },
 			);
@@ -113,7 +113,7 @@ module.exports = {
 
 		try {
 			const user = await User.findOneAndUpdate(
-				{ username: req.params.userId },
+				{ _id: req.params.userId },
 				{ $addToSet: { friends: req.body } },
 				{ runValidators: true, new: true },
 			);
@@ -133,7 +133,7 @@ module.exports = {
 	async removeFriend(req, res) {
 		try {
 			const user = await User.findOneAndUpdate(
-				{ username: req.params.userId },
+				{ _id: req.params.userId },
 				{
 					$pull: {
 						friends: { friendId: req.params.friendId },
