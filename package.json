@@ -1,7 +1,7 @@
 {
 	"name": "Echo-Social-Network-API",
 	"version": "1.0.1",
-	"description": "Mongoose back-end project - Main",
+	"description": "Mongoose back-end project",
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
