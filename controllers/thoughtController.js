@@ -30,6 +30,7 @@ module.exports = {
 		}
 	},
 	
+	// FIXME:  doesnt update user when thought created
 	// Create a thought
 	async createThought(req, res) {
 		try {
@@ -42,7 +43,7 @@ module.exports = {
 			console.log(thought);
 
 			const user = await User.findOneAndUpdate(
-				{ username: req.params.userId },
+				{ _id: req.params.userId },
 				{ $addToSet: { thoughts: thought._id } },
 				{ runValidators: true, new: true },
 			);
@@ -95,6 +96,8 @@ module.exports = {
 		}
 	},
 
+
+	// FIXME: createReaction
 	async createReaction(req, res) {
 		try {
 			console.log('You are adding a reaction');
