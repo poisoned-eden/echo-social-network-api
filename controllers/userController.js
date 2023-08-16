@@ -53,7 +53,7 @@ module.exports = {
 					.json({ message: 'No such user exists' });
 			}
 
-			// TODO: get deleteMany up and running
+			// FIXME: get deleteMany up and running
 
 			// const thoughts = await Thought.deleteMany(
 			// 	{ username: user.username },
