@@ -51,25 +51,23 @@ module.exports = {
 
 			if (!user) {
 				return res
-					.status(404)
-					.json({ message: 'No such user exists' });
+				.status(404)
+				.json({ message: 'No such user exists' });
 			}
+			
+			console.log('deleted user');
+			console.log(user);
 
-			// FIXME: get deleteMany up and running
+			const thoughts = await Thought.deleteMany(
+				{ username: user.username }
+			);
+			
+			
+			res.json({ 
+				userDeleted: user,
+				thoughtsDeleted: thoughts
+			});
 
-			// const thoughts = await Thought.deleteMany(
-			// 	{ username: user.username },
-			// 	{ $pull: { username: req.params.userId } },
-			// 	{ new: true },
-			// );
-
-			// if (!thoughts) {
-			// 	return res
-			// 		.status(404)
-			// 		.json({ message: 'User deleted, but no thoughts found', });
-			// }
-
-			res.json({ message: 'User successfully deleted' });
 		} catch (err) {
 			console.log(err);
 			res.status(500).json(err);
