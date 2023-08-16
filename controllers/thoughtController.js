@@ -30,6 +30,7 @@ module.exports = {
 		}
 	},
 	
+	// FIXME:  doesnt update user when thought created
 	// Create a thought
 	async createThought(req, res) {
 		try {

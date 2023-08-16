@@ -18,14 +18,14 @@ const userSchema = new Schema(
 				'Must be an email address',
 			],
 		},
-		thoughts: {
+		thoughts: [{
 			type: Schema.Types.ObjectId,
 			ref: 'Thought',
-		},
-		friends: {
+		}],
+		friends: [{
 			type: Schema.Types.ObjectId,
 			ref: 'User',
-		},
+		}],
 	},
 	{
 		toJSON: {
@@ -34,10 +34,12 @@ const userSchema = new Schema(
 		id: false,
 	},
 );
-
-userSchema.virtual('friendCount').get(function () {
-	return this.friends.length;
-});
+// FIXME: commented out to find solution to .length not working
+userSchema
+	.virtual('friendCount')
+	.get(function () {
+		return console.log(this);
+	});
 
 const User = model('User', userSchema);
 
