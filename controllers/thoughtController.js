@@ -95,8 +95,6 @@ module.exports = {
 		}
 	},
 
-
-	// FIXME: createReaction
 	async createReaction(req, res) {
 		try {
 			console.log('You are adding a reaction');
