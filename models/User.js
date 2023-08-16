@@ -34,7 +34,7 @@ const userSchema = new Schema(
 		id: false,
 	},
 );
-// FIXME: commented out to find solution to .length not working
+// FIXME: set this to return length of friends array
 userSchema
 	.virtual('friendCount')
 	.get(function () {

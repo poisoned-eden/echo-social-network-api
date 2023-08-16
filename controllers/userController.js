@@ -17,9 +17,13 @@ module.exports = {
 	// Get a single user
 	async getSingleUser(req, res) {
 		try {
-			const user = await User.findOne({
-				_id: req.params.userId,
-			}).select('-__v');
+			const user = await User
+				.findOne({
+					_id: req.params.userId,
+				})
+				.populate('thoughts')
+				.populate('friends')
+				.select('-__v');
 
 			if (!user) {
 				return res
@@ -101,7 +105,7 @@ module.exports = {
 		try {
 			const user = await User.findOneAndUpdate(
 				{ _id: req.params.userId },
-				{ $addToSet: { friends: req.body } },
+				{ $addToSet: { friends: req.params.friendId } },
 				{ runValidators: true, new: true },
 			);
 
