@@ -12,6 +12,8 @@ module.exports = {
 			return res.status(500).json(err);
 		}
 	},
+
+	// TODO: set this to pull in full thoughts and friends info
 	// Get a single user
 	async getSingleUser(req, res) {
 		try {
