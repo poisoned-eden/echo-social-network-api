@@ -34,11 +34,11 @@ const userSchema = new Schema(
 		id: false,
 	},
 );
-// FIXME: set this to return length of friends array
+
 userSchema
 	.virtual('friendCount')
 	.get(function () {
-		return console.log(this);
+		return this.friends.length;
 	});
 
 const User = model('User', userSchema);
